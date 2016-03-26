@@ -14,11 +14,19 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
 
-app.use(function(req, res, next) {
-	res.header("Access-Control-Allow-Origin", "*");
-	res.header("Access-Control-Allow-Headers", "X-Requested-With");
-	next();
+app.use(express.static('public'));
+
+//using regex to support backbone pushState:true
+app.get(/^\/app(\/\w*)*$/, function (req, res) {
+	console.log(path.join(__dirname, 'public/index.html'));
+	res.sendFile(path.join(__dirname, 'public/index.html'));
 });
+
+//app.use(function(req, res, next) {
+//	res.header("Access-Control-Allow-Origin", "*");
+//	res.header("Access-Control-Allow-Headers", "X-Requested-With");
+//	next();
+//});
 
 
 app.use('/api', apiv2);

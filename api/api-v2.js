@@ -30,12 +30,13 @@ router.get('/feed/:id', function (req, res) {
 
 });
 
+//update feed (timestamp etc.)
 router.post('/feed/:id', function (req, res) {
 	FeedService.updateFeed(req.body, function(err, result) {
 		if (err) {
-			console.log(err)
+			logger.error(err);
 		} else {
-			res.status(200).send('update success');
+			res.status(200).send('update feed success');
 		}
 	})
 });
@@ -46,7 +47,8 @@ router.post('/feed/:id/blogs', function (req, res) {
 		if (err) {
 			logger.error(err);
 		} else {
-			res.status(200).send('blogs save success');
+			logger.debug('update blogs result: ', result);
+			res.status(200).json(result);
 		}
 	})
 });

@@ -7,8 +7,14 @@ var blogService = {
 		connection.query('SELECT blog_url, blog_title, post_date, blog_digest from blogs WHERE feed_id=' + feedId, callback)
 	},
 
+	/*
+		This operation is an 3-step transaction:
+		1. save blogs to the feed
+		2. update feed last update time
+		3. return the feed that is updated
+	 */
 	saveBlogs: function(blogs, feedId, callback) {
-		logger.debug('BlogService.saveBlogs: ', blogs, feedId);
+		//logger.debug('BlogService.saveBlogs: ', blogs, feedId);
 		var values = generateInsertValues(blogs, ['feed_id', 'blog_url', 'blog_title', 'post_date', 'blog_digest']);
 
 		connection.beginTransaction(function(err) {
@@ -22,22 +28,33 @@ var blogService = {
 				}
 
 				// update feed table (last_update)
-				connection.query('UPDATE feed SET last_update=? WHERE id = ?', [new Date(), feedId], function(err) {
+				connection.query('UPDATE feed SET last_update=? WHERE id = ?', [new Date(), feedId], function(err, result) {
 					if (err) {
 						return connection.rollback(function() {
 							callback(err);
 							throw err;
 						});
 					}
-					connection.commit(function(err) {
+					connection.query('SELECT * from feed WHERE id=' + feedId, function(err, result) {
 						if (err) {
 							return connection.rollback(function() {
 								callback(err);
 								throw err;
 							});
 						}
-						callback();
-						console.log('transaction success!');
+
+						logger.debug('BlogService saveBlogs transaction result: ', result);
+
+						connection.commit(function(err) {
+							if (err) {
+								return connection.rollback(function() {
+									callback(err);
+									throw err;
+								});
+							}
+							callback(err, result);
+							logger.info('BlogService saveBlogs transaction success!');
+						});
 					});
 				});
 			});
