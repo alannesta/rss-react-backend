@@ -14,7 +14,6 @@ var feedService = {
 
 	saveFeed: function(feed, callback) {
 		var insertQuery = "INSERT IGNORE INTO feed SET ?";
-		//console.log('save feed: --->', feed);
 		logger.info('FeedService.saveFeed: ', feed);
 		connection.query(insertQuery, {
 			feed_name: feed.feedName,
