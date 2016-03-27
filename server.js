@@ -14,13 +14,17 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
 
-app.use(express.static('public'));
 
-//using regex to support backbone pushState:true
-app.get(/^\/app(\/\w*)*$/, function (req, res) {
-	console.log(path.join(__dirname, 'public/index.html'));
-	res.sendFile(path.join(__dirname, 'public/index.html'));
-});
+if (process.env.NODE_ENV !== 'production') {
+	app.use(express.static('public'));
+
+	//using regex to support backbone pushState:true
+	app.get(/^\/app(\/\w*)*$/, function (req, res) {
+		console.log(path.join(__dirname, 'public/index.html'));
+		res.sendFile(path.join(__dirname, 'public/index.html'));
+	});
+}
+
 
 //app.use(function(req, res, next) {
 //	res.header("Access-Control-Allow-Origin", "*");
