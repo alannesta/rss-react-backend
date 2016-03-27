@@ -17,10 +17,8 @@ app.use(cookieParser());
 
 if (process.env.NODE_ENV !== 'production') {
 	app.use(express.static('public'));
-
 	//using regex to support backbone pushState:true
 	app.get(/^\/app(\/\w*)*$/, function (req, res) {
-		console.log(path.join(__dirname, 'public/index.html'));
 		res.sendFile(path.join(__dirname, 'public/index.html'));
 	});
 }
