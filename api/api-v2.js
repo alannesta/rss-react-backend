@@ -54,7 +54,7 @@ router.post('/feed/:id/blogs', function (req, res) {
 });
 
 router.get('/feed/:id/blogs', function (req, res) {
-	BlogService.getAllBlogs(req.params.id, function(err, result) {
+	BlogService.getBlogs(req.params.id, req.query.count, function(err, result) {
 		if (err) {
 			console.log(err)
 		} else {
