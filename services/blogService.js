@@ -5,7 +5,7 @@ var logger = require('../utils/logger');
 var blogService = {
 	getBlogs: function(feedId, count, callback) {
 		var query = "SELECT blog_url, blog_title, post_date, blog_digest from blogs WHERE feed_id=" + feedId +
-				" ORDER BY post_date LIMIT " + count;
+				" ORDER BY post_date DESC LIMIT " + count;
 		connection.query(query, callback)
 	},
 
