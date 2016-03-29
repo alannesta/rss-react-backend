@@ -4,9 +4,31 @@ var logger = require('../utils/logger');
 
 var blogService = {
 	getBlogs: function(feedId, count, callback) {
-		var query = "SELECT blog_url, blog_title, post_date, blog_digest from blogs WHERE feed_id=" + feedId +
+
+		var resultSet = {
+			blogs: [],
+			feedId: feedId,
+			blogCount: -1
+		};
+
+		var blogQuery = "SELECT blog_url, blog_title, post_date, blog_digest from blogs WHERE feed_id=" + feedId +
 				" ORDER BY post_date DESC LIMIT " + count;
-		connection.query(query, callback)
+
+		var totalQuery = "SELECT count(*) from blogs WHERE feed_id=" + feedId;
+
+		connection.query(blogQuery, function(err, result) {
+			if (err) {
+				logger.error(err);
+				callback(err);
+			}
+			resultSet.blogs = result;
+			connection.query(totalQuery, function(err, result) {
+				var key = "count(*)";	// dan teng
+				logger.debug('total query result: ', result);
+				resultSet.blogCount = result[0][key];
+				callback(err, resultSet);
+			})
+		})
 	},
 
 	/*
