@@ -66,7 +66,8 @@ router.get('/feed/:id/blogs', function (req, res) {
 router.post('/feed', function (req, res) {
 	FeedService.saveFeed(req.body, function(err, result) {
 		if (err) {
-			console.log(err)
+			logger.error(err);
+			res.status(400).send(err);
 		} else {
 			// has to return the feed to trigger auto select
 			res.status(200).send({

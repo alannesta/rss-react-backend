@@ -19,7 +19,13 @@ var feedService = {
 			feed_name: feed.feedName,
 			feed_url: feed.feedUrl,
 			last_update: new Date()
-		}, callback);
+		}, function (err, result) {
+			if (result.affectedRows == 0) {
+				// which means there could be a duplicate, and not inserted successfully
+				return callback("Insertion Failed, Duplicate!");
+			}
+			callback(err, result);
+		});
 
 		//inspection
 		//var statement = "INSERT IGNORE INTO feed VALUES ?";
