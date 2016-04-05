@@ -40,11 +40,20 @@ var feedService = {
 
 	updateFeed: function(feed, callback) {
 		var updateQuery = "UPDATE feed SET ? WHERE id=" + feed.id;
-		connection.query(updateQuery, {
-			feed_name: feed.feedName,
-			feed_url: feed.feedUrl,
-			last_update: feed.lastUpdate
-		}, callback);
+		var updatePayload = {};
+
+		Object.keys(feed).forEach(function(key){
+			updatePayload[key] = feed[key];
+		});
+
+		connection.query(updateQuery, updatePayload, function(err, result) {
+			if (err) {
+				logger.error('SQL_ERROR::update feed: ', err);
+				callback(err);
+			} else {
+				callback(err, result);
+			}
+		});
 	},
 
 	deleteFeedByID: function(feedId, callback) {
