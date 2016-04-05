@@ -36,7 +36,7 @@ router.post('/feed/:id', function (req, res) {
 		if (err) {
 			logger.error(err);
 		} else {
-			res.status(200).send('update feed success');
+			res.status(200).json(result);
 		}
 	})
 });
