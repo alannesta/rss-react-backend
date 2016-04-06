@@ -69,11 +69,7 @@ router.post('/feed', function (req, res) {
 			res.status(500).send(err);
 		} else {
 			// has to return the feed to trigger auto select
-			res.status(200).send({
-				id: result.insertId,
-				feedName: req.body.feedName,
-				feedUrl: req.body.feedUrl
-			});
+			res.status(200).json(result);
 		}
 	})
 });
