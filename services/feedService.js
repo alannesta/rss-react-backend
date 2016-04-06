@@ -27,26 +27,12 @@ var feedService = {
 			callback(err, result);
 		});
 
-		//inspection
-		//var statement = "INSERT IGNORE INTO feed VALUES ?";
-		//var insert = {
-		//	feed_name: feed.feedName,
-		//	feed_url: feed.feedUrl,
-		//	last_update: new Date()
-		//};
-		//console.log(mysql.format(statement,insert));
-
 	},
 
 	updateFeed: function(feed, callback) {
-		var updateQuery = "UPDATE feed SET ? WHERE id=" + feed.id;
-		var updatePayload = {
-			feed_name: feed.feedName,
-			feed_url: feed.feedUrl,
-			last_update: feed.lastUpdate
-		};
+		var updateQuery = "UPDATE feed SET feed_name='"+feed.feedName+"', feed_url='"+feed.feedUrl+ "', last_update=FROM_UNIXTIME("+feed.lastUpdate+") WHERE id=" + feed.id;
 
-		connection.query(updateQuery, updatePayload, function(err) {
+		connection.query(updateQuery, function(err) {
 			if (err) {
 				logger.error('SQL_ERROR::update feed: ', err);
 				callback(err);
@@ -55,7 +41,7 @@ var feedService = {
 					if (err) {
 						callback(err);
 					} else {
-						callback(err, result);
+						callback(err, result[0]);
 					}
 				});
 			}
