@@ -10,7 +10,7 @@ var feedService = {
 	saveFeed: function(feed, callback) {
 		var service = this;
 		var insertQuery = "INSERT IGNORE INTO feed SET ?";
-		logger.info('FeedService.saveFeed: ', feed);
+		logger.debug('FeedService.saveFeed: ', feed);
 		connection.query(insertQuery, {
 			feed_name: feed.feedName,
 			feed_url: feed.feedUrl
@@ -61,7 +61,6 @@ var feedService = {
 				logger.error("SQL_ERROR::getFeedByID: ", err);
 				callback(err);
 			}else{
-				console.log('getfeedbyid', result[0]);
 				callback(err, result[0]);
 			}
 
